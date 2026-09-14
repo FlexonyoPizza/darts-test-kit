@@ -7,34 +7,20 @@ An [Inferno](https://github.com/inferno-framework/inferno-core) test kit for the
 
 DARTS defines server-side operations - `$de-identify`, `$anonymize`, `$pseudonymize` - that transform
 identifiable US Core data into de-identified, anonymized, or pseudonymized output. This kit validates
-**operations conformance** by checking the operation **payloads**, with no live server required:
-
-- The data-reference `Parameters` conform to the `darts-operation-data-urls-parameter` profile.
-- The `policy` value is drawn from the DARTS Policy Identifier value set (`$de-identify` requires it).
-- Input resources (inline Bundle or fetched NDJSON) conform to **US Core**.
-- Output resources conform to **DAPL** (`$de-identify` / `$anonymize`) or **US Core** (`$pseudonymize`,
-  which remains PHI).
-
+**operations conformance** by checking the operation **payloads**.
 Each of the three operation groups takes a request and/or response payload (raw JSON or a URL) as input.
 
 ### Relationship to other kits
 
 This kit is one of three for the de-identified-submission pipeline: **DARTS** (operations, this kit) →
 **DAPL** (individual de-identified resource conformance - a separate kit, reused here for output
-validation and by UDS+) → **UDS+** (the manifest/submission flow to HRSA). Comprehensive per-resource
-DAPL validation here is a thin check, isolated so the standalone DAPL test kit can be composed later.
+validation and by UDS+) → **UDS+** (the manifest/submission flow to HRSA).
 
 ## Getting Started (local Ruby)
 
-```sh
-bundle install
-bundle exec inferno migrate
-bundle exec inferno services start   # starts the FHIR validator + Redis
-bundle exec inferno start            # then open http://localhost:4567
-```
+1. [Set Up Environment](https://inferno-framework.github.io/docs/getting-started/#:~:text=changes%20take%20effect.-,Set%20Up%20Environment,-Install%20Docker.)
 
-Select the **DARTS Test Kit** suite, open an operation group, paste an operation request and/or
-response payload (or a URL to one), and run.
+2. Select the **DARTS Client Suite**, open an operation group, paste an operation request payload (inline Bundle or fetched NDJSON), and the Base URL of the Trust Service Provider under test, then run.
 
 ### IG packages for validation
 
