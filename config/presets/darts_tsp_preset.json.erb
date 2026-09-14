@@ -1,0 +1,9 @@
+{
+  "title": "Test against the DARTS data submitter suite",
+  "test_suite_id": "darts_tsp",
+  "inputs": [
+    { "name": "de_identify_response", "value": <%= File.read(File.join('lib', 'darts_test_kit', 'tsp', 'responses', 'de_identified_bundle.json')).to_json %> },
+    { "name": "anonymize_response", "value": <%= File.read(File.join('lib', 'darts_test_kit', 'tsp', 'responses', 'anonymized_dataset.json')).to_json %> },
+    { "name": "pseudonymize_response", "value": <%= File.read(File.join('lib', 'darts_test_kit', 'tsp', 'responses', 'pseudonymized_bundle.json')).to_json %> }
+  ]
+}

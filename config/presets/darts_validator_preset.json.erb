@@ -1,0 +1,8 @@
+{
+  "title": "Test against the TSP server suite simulator (de-identify only)",
+  "test_suite_id": "darts_validator",
+  "inputs": [
+    { "name": "de_identify_request", "value": <%= File.read(File.join('lib', 'darts_test_kit', 'examples', 'us_core_request_bundle.json')).to_json %> },
+    { "name": "tsp_base_url", "value": "http://localhost:4567/custom/darts_tsp" }
+  ]
+}

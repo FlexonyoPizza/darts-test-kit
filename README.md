@@ -1,50 +1,76 @@
-# Darts Test Kit Test Kit
+# DARTS Test Kit
 
-Darts test kit [Inferno](https://github.com/inferno-community/inferno-core) Test Kit
-for FHIR testing.
+An [Inferno](https://github.com/inferno-framework/inferno-core) test kit for the
+[DARTS (De-Identification, Anonymization, Redaction Toolkit Services) IG v1.0.0-ballot](https://build.fhir.org/ig/HL7/fhir-darts/).
 
-## Getting Started
+## What it tests
 
-The quickest way to run this test kit locally is with [Docker](https://www.docker.com/).
+DARTS defines server-side operations - `$de-identify`, `$anonymize`, `$pseudonymize` - that transform
+identifiable US Core data into de-identified, anonymized, or pseudonymized output. This kit validates
+**operations conformance** by checking the operation **payloads**, with no live server required:
 
-- Install Docker
-- Clone this repository, or download an [official release](/releases) if available.
-- Run `./setup.sh` within the test kit directory to download necessary dependencies
-- Run `./run.sh` within the test kit directory to start the application
-- Navigate to `http://localhost`
+- The data-reference `Parameters` conform to the `darts-operation-data-urls-parameter` profile.
+- The `policy` value is drawn from the DARTS Policy Identifier value set (`$de-identify` requires it).
+- Input resources (inline Bundle or fetched NDJSON) conform to **US Core**.
+- Output resources conform to **DAPL** (`$de-identify` / `$anonymize`) or **US Core** (`$pseudonymize`,
+  which remains PHI).
 
-## Instructions for Developing Your Test Kit
+Each of the three operation groups takes a request and/or response payload (raw JSON or a URL) as input.
 
-Refer to the Inferno documentation for information about [setting up
-your development environment and running your Test Kit](https://inferno-framework.github.io/docs/getting-started/).
+### Relationship to other kits
 
-More information about what is included in this repository can be [found here](https://inferno-framework.github.io/docs/getting-started/repo-layout-and-organization.html).
+This kit is one of three for the de-identified-submission pipeline: **DARTS** (operations, this kit) →
+**DAPL** (individual de-identified resource conformance - a separate kit, reused here for output
+validation and by UDS+) → **UDS+** (the manifest/submission flow to HRSA). Comprehensive per-resource
+DAPL validation here is a thin check, isolated so the standalone DAPL test kit can be composed later.
+
+## Getting Started (local Ruby)
+
+```sh
+bundle install
+bundle exec inferno migrate
+bundle exec inferno services start   # starts the FHIR validator + Redis
+bundle exec inferno start            # then open http://localhost:4567
+```
+
+Select the **DARTS Test Kit** suite, open an operation group, paste an operation request and/or
+response payload (or a URL to one), and run.
+
+### IG packages for validation
+
+The validator loads the DARTS, DAPL, and US Core packages (see `igs(...)` in
+[darts_test_suite.rb](lib/darts_test_kit/darts_test_suite.rb) and the versions in
+[version.rb](lib/darts_test_kit/version.rb)):
+
+- `hl7.fhir.us.darts#1.0.0-ballot`
+- `hl7.fhir.us.dapl#1.0.0-ballot`
+- `hl7.fhir.us.core#6.1.0` &nbsp;*(TODO: confirm the version the DARTS IG depends on)*
+
+Ballot packages may not resolve from the public FHIR registry. If they don't, download each package
+`.tgz` into `lib/darts_test_kit/igs/` and change the `igs` call to reference the file, e.g.
+`igs 'igs/hl7.fhir.us.darts.tgz'`. (Alternatively, regenerate with
+`inferno new ... -i https://build.fhir.org/ig/HL7/fhir-darts/`.)
+
+## Example payloads
+
+Structural samples live in [lib/darts_test_kit/examples/](lib/darts_test_kit/examples/) and are served
+at `…/custom/darts/examples/<name>`. For fully conformant resource content, use the published IG
+examples linked in that directory's README.
+
+## Verifying test kit logic
+
+Unit tests (rspec) live in `spec/`:
+
+```sh
+bundle exec rspec
+```
 
 ## Documentation
 - [Inferno documentation](https://inferno-framework.github.io/docs/)
-- [Ruby API documentation](https://inferno-framework.github.io/inferno-core/docs/)
-- [JSON API documentation](https://inferno-framework.github.io/inferno-core/api-docs/)
-
-## Verifying Test Kit Logic
-
-This template test kit includes examples for two tools that can be used to verify Inferno test kit logic:
-- Unit tests written in rspec: test kit code is verified in isolation from other components. Examples
-  of these can be found in the `spec` directory. Those examples and any others defined in that directory
-  will be executed by the ruby.yml workflow (`.github/workflows/ruby.yml`)
-  if this test kit is committed to a Github repository.
-- Execution scripts: test kit code is verified against previous results in a deployed Inferno
-  environment including the associated services. See [CI/CD Usage](https://inferno-framework.github.io/docs/ci-cd-usage.html)
-  in the Inferno documentation for more details on creating execution scripts. Examples of
-  these can be found in the `execution_scripts` directory. Those examples and any other defined in that directory
-  will be executed by the run_inferno_execution_scripts.yml workflow (`.github/workflows/run_inferno_execution_scripts.yml`)
-  if this test kit is committed to a Github repository.
-
-## Example Inferno Test Kits
-
-A list of all Test Kits registered with the Inferno Team can be found on the [Test Kit Registry](https://inferno-framework.github.io/community/test-kits.html) page.
+- [DARTS IG](https://build.fhir.org/ig/HL7/fhir-darts/) · [DAPL IG](https://build.fhir.org/ig/HL7/fhir-dapl/)
 
 ## License
-Copyright 2026 TODO
+Copyright 2026
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the

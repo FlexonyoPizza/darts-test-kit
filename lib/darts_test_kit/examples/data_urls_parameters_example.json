@@ -1,0 +1,21 @@
+{
+  "resourceType": "Parameters",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/darts/StructureDefinition/darts-operation-data-urls-parameter"
+    ]
+  },
+  "parameter": [
+    {
+      "name": "format",
+      "valueCode": "fhir+ndjson"
+    },
+    {
+      "name": "data",
+      "part": [
+        { "name": "resourceType", "valueCode": "Patient" },
+        { "name": "resourceUrl", "valueUrl": "https://example.org/darts/Patient.ndjson" }
+      ]
+    }
+  ]
+}

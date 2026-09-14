@@ -1,0 +1,57 @@
+{
+  "resourceType" : "MeasureReport",
+  "id" : "dapl-anonymized-dataset-example",
+  "meta" : {
+    "profile" : ["http://hl7.org/fhir/us/dapl/StructureDefinition/dapl-anonymized-dataset"]
+  },
+  "status" : "complete",
+  "type" : "summary",
+  "measure" : "http://example.org/Measure/anonymize-data",
+  "reporter" : {
+    "reference" : "Organization/holy-healthcare"
+  },
+  "period" : {
+    "start" : "2018-01-01",
+    "end" : "2018-01-31"
+  },
+  "group" : [{
+    "stratifier" : [{
+      "stratum" : [{
+        "component" : [{
+          "code" : {
+            "text" : "Age Group Stratification"
+          },
+          "value" : {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/us/dapl/StructureDefinition/dapl-measure-stratifier-component-value-extension",
+              "valueRange" : {
+                "low" : {
+                  "value" : 40
+                },
+                "high" : {
+                  "value" : 50
+                }
+              }
+            }],
+            "text" : "value element not used"
+          }
+        },
+        {
+          "code" : {
+            "text" : "Region Stratification"
+          },
+          "value" : {
+            "coding" : [{
+              "system" : "http://hl7.org/fhir/administrative-gender",
+              "code" : "male",
+              "display" : "Male"
+            }]
+          }
+        }],
+        "measureScore" : {
+          "value" : 76
+        }
+      }]
+    }]
+  }]
+}

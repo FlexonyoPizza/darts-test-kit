@@ -1,8 +1,11 @@
-# frozen_string_literal: true
-
 source "https://rubygems.org"
 
 gemspec
+
+# TODO: remove this gemfile pin after
+# migrating the DAPL Test Kit to an official ONC repository and releasing
+# a gem for it
+gem 'dapl_test_kit', git: 'https://github.com/FlexonyoPizza/dapl-test-kit.git', branch: 'main'
 
 group :development, :test do
   gem 'debug'

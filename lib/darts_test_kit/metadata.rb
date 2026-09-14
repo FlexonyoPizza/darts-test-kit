@@ -3,74 +3,44 @@ require_relative 'version'
 module DartsTestKit
   class Metadata < Inferno::TestKit
     id :darts
-    title 'Darts Test Kit'
+    title 'DARTS Test Kit'
     description <<~DESCRIPTION
-      The Example Test Kit is a testing tool for Health IT systems seeking to meet the requirements of API Criterion within the Example Certification Program.
-
-      *or*
-
-      The Example Test Kit validates the conformance of a server implementation to a specific version of the [Example IG](https://example.com/example).
-      Currently, Inferno can test against implementations of following versions of the Example IG: v1.0.0, v1.3.0, v2.0.0, and v3.0.1.
+      The DARTS Test Kit validates conformance to the [DARTS (De-Identification, Anonymization,
+      Redaction Toolkit Services) Implementation Guide v1.0.0-ballot](https://build.fhir.org/ig/HL7/fhir-darts/).
+      DARTS defines server-side services (`$de-identify`, `$anonymize`, `$pseudonymize`) that transform
+      identifiable US Core data into de-identified, anonymized, or pseudonymized output.
 
       <!-- break -->
 
       ## Getting Started
 
-      Please select which approved version of each standard to use, and click ‘Create Test Session’ to begin testing.
+      Use the **DARTS Client Suite** to test a Trust Service Provider. Inferno acts as the Data
+      Submitter: point the suite at the base URL of the system under test, and for each operation it
+      sends US Core input, invokes the operation over HTTP, and validates the response. Output is
+      checked against the specification appropriate to that operation:
 
-      This test kit includes a [simulated conformant FHIR API](https://inferno.healthit.gov/reference-server/)
-      that can be used to demonstrate success for all tests. This simulated API is open source and is available on GitHub.
-      Visit the [walkthrough](https://example.com/Walkthrough) for a demonstration
-      of using these tests against the provided simulated FHIR API.
+      - `$de-identify` - each returned resource against its individual
+        [DAPL](https://build.fhir.org/ig/HL7/fhir-dapl/) profile.
+      - `$anonymize` - the aggregate `dapl-anonymized-dataset` MeasureReport.
+      - `$pseudonymize` - against US Core, since pseudonymized records remain individual-level,
+        re-identifiable PHI rather than de-identified data.
 
       ## Status
 
-      The Example Test Kit is actively developed and updates are released monthly.
-
-      *or*
-
-      These tests are a **DRAFT**. Future versions of these tests may verify other requirements and may change how these requirements are tested.
-
-      ## Conformance
-
-      The test kit currently tests all requirements for the
-      [API Criterion within the Example Certification Program](https://example.com/api-criterion).
-      This includes:
-      - The Lorum IG [v1.0.0](https://example.com/lorum/1.0.0)
-      - The Ipsum IG [v2.0.0](https://example.com/ipsum/2.0.0), [v3.0.1](https://example.com/ipsum/3.0.1)
-      - The Dolor IG [v2.0.2](https://example.com/dolor/2.0.2)
-
-      *or*
-
-      The test kit currently tests the following requirements:
-      - Vel mattis erat semper ut
-      - Suspendisse eget tempor
-      - Nulla eu cursus turpis
-      - Praesent orci diam
-
-
-      ## Repository
-
-      The Example Kit can be
-      [downloaded from its GitHub repository](https://example.com/example-test-kit-repo),
-      where additional resources and documentation are also available to help users get
-      started with the testing process. The repository [Wiki](https://example.com/example-test-kit-repo/wiki/)
-      provides a [FAQ](https://example.com/example-test-kit-repo/wiki/FAQ) for testers,
-      and the [Releases](https://example.com/example-test-kit-repo/releases) page provides information about each new release.
+      These tests are a **DRAFT** built against ballot versions of the DARTS and DAPL IGs and will change
+      as those guides mature.
 
       ## Providing Feedback and Reporting Issues
 
-      We welcome feedback on the tests, including but not limited to the following areas:
-
-      - Validation logic, such as potential bugs, lax checks, and unexpected failures.
-      - Requirements coverage, such as requirements that have been missed, tests that necessitate features that the IG does not require, or other issues with the interpretation of the IG’s requirements.
-      - User experience, such as confusing or missing information in the test UI.
-
-      Please report any issues with this set of tests in the [issues section](https://example.com/example-test-kit-repo/issues) of the repository.
+      Please report any issues with this set of tests in the issues section of the repository.
     DESCRIPTION
 
-    suite_ids [:darts]
-    tags [] # E.g., ['SMART App Launch', 'US Core']
+    # Suites shown on the test kit landing page:
+    #   darts_validator - Client Suite: tests a Trust Service Provider's DARTS operations.
+    #   darts_tsp       - Server Suite: simulates a TSP, for use when no real one is available.
+    # (The legacy passive payload suite is still reachable at /darts.)
+    suite_ids [:darts_validator, :darts_tsp]
+    tags ['De-Identification', 'DARTS']
     last_updated LAST_UPDATED
     version VERSION
     maturity 'Low'
